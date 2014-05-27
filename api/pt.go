@@ -18,6 +18,10 @@ func (c *ApiClient) GetTvRecords() ([]*models.TvRecord, error) {
 	}
 }
 
+func GetTvRecords() ([]*models.TvRecord, error) {
+	return DefaultApiClient.GetTvRecords()
+}
+
 func (c *ApiClient) GetTvChannels() ([]*models.TvChannel, error) {
 	endpoint := buildUrl("/api/pt/channels/")
 	if resp, err := c.Get(endpoint); err != nil {
@@ -32,6 +36,6 @@ func (c *ApiClient) GetTvChannels() ([]*models.TvChannel, error) {
 	}
 }
 
-func GetTvRecords() ([]*models.TvRecord, error) {
-	return DefaultApiClient.GetTvRecords()
+func GetTvChannels() ([]*models.TvChannel, error) {
+	return DefaultApiClient.GetTvChannels()
 }
