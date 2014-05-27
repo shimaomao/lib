@@ -18,6 +18,20 @@ func (c *ApiClient) GetTvRecords() ([]*models.TvRecord, error) {
 	}
 }
 
+func (c *ApiClient) GetTvChannels() ([]*models.TvChannel, error) {
+	endpoint := buildUrl("/api/pt/channels/")
+	if resp, err := c.Get(endpoint); err != nil {
+		return nil, err
+	} else {
+		var channels []*models.TvChannel
+		if err := handleAsJson(resp, &channels); err != nil {
+			return nil, err
+		} else {
+			return channels, nil
+		}
+	}
+}
+
 func GetTvRecords() ([]*models.TvRecord, error) {
 	return DefaultApiClient.GetTvRecords()
 }
