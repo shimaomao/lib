@@ -63,6 +63,35 @@ func (dr *DummyRecord) CheckInterval() time.Duration {
 	return time.Duration(1 * time.Millisecond)
 }
 
+func TestRecorderUpcomming(t *testing.T) {
+	assert := wcg.NewAssert(t)
+	receiver := make(chan []Record)
+	recorder := NewRecorder((<-chan []Record)(receiver))
+	interval := time.Duration(30) * time.Millisecond
+	wait := 10
+	go recorder.Start(interval)
+
+	r1 := NewDummyRecord("r1")
+	r1.startAt = time.Now().Add(time.Duration(2 * time.Hour))
+	r1.endAt = r1.startAt.Add(time.Duration(10 * time.Minute))
+	r2 := NewDummyRecord("r2")
+	r2.startAt = time.Now().Add(time.Duration(4 * time.Hour))
+	r2.endAt = r2.startAt.Add(time.Duration(10 * time.Minute))
+	r3 := NewDummyRecord("r3")
+	r3.startAt = time.Now().Add(time.Duration(8 * time.Hour))
+	r3.endAt = r3.startAt.Add(time.Duration(10 * time.Minute))
+
+	receiver <- []Record{r1, r2, r3}
+	err := util.WaitFor(func() bool {
+		return len(recorder.controls) == 3
+	}, wait)
+	assert.Nil(err, "check all records in controls.")
+
+	upcome := recorder.Upcomming()
+	assert.Ok(r1.startAt.Equal(upcome), "Upcomming should be r2")
+	recorder.Stop()
+}
+
 func TestRecorderStart(t *testing.T) {
 	assert := wcg.NewAssert(t)
 	receiver := make(chan []Record)

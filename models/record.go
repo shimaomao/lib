@@ -182,6 +182,23 @@ func (r *Recorder) Stop() {
 	r.shouldStop = true
 }
 
+func (r *Recorder) Upcomming() time.Time {
+	var min time.Time
+	for _, v := range r.controls {
+		t := v.record.StartAt()
+		if v.state == RSWaiting || v.state == RSRecording {
+			if min.IsZero() {
+				min = t
+			} else {
+				if t.Before(min) {
+					min = t
+				}
+			}
+		}
+	}
+	return min
+}
+
 func (r *Recorder) merge(newrecords []Record) {
 	// convert newrecords to map
 	now := time.Now()
