@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/speedland/lib/models"
+	"io"
 )
 
 func (c *ApiClient) GetTvRecords() ([]*models.TvRecord, error) {
@@ -38,4 +39,22 @@ func (c *ApiClient) GetTvChannels() ([]*models.TvChannel, error) {
 
 func GetTvChannels() ([]*models.TvChannel, error) {
 	return DefaultApiClient.GetTvChannels()
+}
+
+func (c *ApiClient) UploadPrograms(jsondata io.Reader) (map[string][]interface{}, error) {
+	endpoint := buildUrl("/api/pt/epgs/")
+	if resp, err := c.Post(endpoint, "application/json", jsondata); err != nil {
+		return nil, err
+	} else {
+		var result map[string][]interface{}
+		if err = handleAsJson(resp, &result); err != nil {
+			return nil, err
+		} else {
+			return result, nil
+		}
+	}
+}
+
+func UploadPrograms(jsondata io.Reader) (map[string][]interface{}, error) {
+	return DefaultApiClient.UploadPrograms(jsondata)
 }
