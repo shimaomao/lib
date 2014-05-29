@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"github.com/speedland/lib/models"
 	"io"
 )
@@ -41,8 +42,8 @@ func GetTvChannels() ([]*models.TvChannel, error) {
 	return DefaultApiClient.GetTvChannels()
 }
 
-func (c *ApiClient) UploadPrograms(jsondata io.Reader) (map[string][]interface{}, error) {
-	endpoint := buildUrl("/api/pt/epgs/")
+func (c *ApiClient) UploadPrograms(cid string, jsondata io.Reader) (map[string][]interface{}, error) {
+	endpoint := buildUrl(fmt.Sprintf("/api/pt/epgs/%s", cid))
 	if resp, err := c.Post(endpoint, "application/json", jsondata); err != nil {
 		return nil, err
 	} else {
@@ -55,6 +56,6 @@ func (c *ApiClient) UploadPrograms(jsondata io.Reader) (map[string][]interface{}
 	}
 }
 
-func UploadPrograms(jsondata io.Reader) (map[string][]interface{}, error) {
-	return DefaultApiClient.UploadPrograms(jsondata)
+func UploadPrograms(cid string, jsondata io.Reader) (map[string][]interface{}, error) {
+	return DefaultApiClient.UploadPrograms(cid, jsondata)
 }
