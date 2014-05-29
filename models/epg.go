@@ -4,20 +4,21 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/speedland/lib/util"
 	"io"
 	"strings"
 	"time"
 )
 
 type Epg struct {
-	EventId    int        `json:"evenrt_id"`
-	Title      string     `json:"title"`
-	Detail     []byte     `json:"detail"`
-	StartAt    time.Time  `json:"start_at"`
-	EndAt      time.Time  `json:"end_at"`
-	Cid        string     `json:"cid"`
-	Sid        string     `json:"sid"`
-	Categories []Category `json:"category"`
+	EventId    int             `json:"evenrt_id"`
+	Title      string          `json:"title"`
+	Detail     util.ByteString `json:"detail"`
+	StartAt    time.Time       `json:"start_at"`
+	EndAt      time.Time       `json:"end_at"`
+	Cid        string          `json:"cid"`
+	Sid        string          `json:"sid"`
+	Categories []Category      `json:"category"`
 }
 
 type Category struct {

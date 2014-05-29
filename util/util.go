@@ -13,6 +13,21 @@ import (
 	"time"
 )
 
+// To represent []byte as string in JSON.
+type ByteString []byte
+
+func (s *ByteString) MarshalJSON() ([]byte, error) {
+	bytes, err := json.Marshal(string(*s))
+	return bytes, err
+}
+
+func (s *ByteString) UnmarshalJSON(data []byte) error {
+	var x string
+	err := json.Unmarshal(data, &x)
+	*s = ByteString(x)
+	return err
+}
+
 var logger wcg.Logger
 
 // Returns a singleton logger for non HTTP context.
@@ -56,6 +71,7 @@ func WaitFor(f func() bool, seconds int) error {
 }
 
 const ISO8601 = "2006-01-02T15:04:05Z"
+const ISO8601_DATE = "2006-01-02"
 
 // Use ISO8601 format: 2006-01-02T15:04:05Z
 func FormatDateTime(t time.Time) string {
@@ -65,6 +81,16 @@ func FormatDateTime(t time.Time) string {
 // Use ISO8601 format: 2006-01-02T15:04:05Z
 func ParseDateTime(str string) (time.Time, error) {
 	return time.Parse(ISO8601, str)
+}
+
+// Use ISO8601 format: 2006-01-02T15:04:05Z
+func FormatDate(t time.Time) string {
+	return t.Format(ISO8601_DATE)
+}
+
+// Use ISO8601 format: 2006-01-02T15:04:05Z
+func ParseDate(str string) (time.Time, error) {
+	return time.Parse(ISO8601_DATE, str)
 }
 
 func NormalizeDateTime(t time.Time) time.Time {
