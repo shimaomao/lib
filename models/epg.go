@@ -11,25 +11,20 @@ import (
 )
 
 type Epg struct {
-	EventId    int             `json:"evenrt_id"`
-	Title      string          `json:"title"`
-	Detail     util.ByteString `json:"detail"`
-	StartAt    time.Time       `json:"start_at"`
-	EndAt      time.Time       `json:"end_at"`
-	Cid        string          `json:"cid"`
-	Sid        string          `json:"sid"`
-	Categories []Category      `json:"category"`
-	ExtDetails []ExtDetail     `json:"extdetail"`
+	EventId    int               `json:"evenrt_id"`
+	Title      string            `json:"title"`
+	Detail     util.ByteString   `json:"detail"`
+	StartAt    time.Time         `json:"start_at"`
+	EndAt      time.Time         `json:"end_at"`
+	Cid        string            `json:"cid"`
+	Sid        string            `json:"sid"`
+	Categories []Category        `json:"category"`
+	ExtDetails map[string]string `json:"extdetail"`
 }
 
 type Category struct {
 	Middle string `json:"middle"`
 	Large  string `json:"large"`
-}
-
-type ExtDetail struct {
-	Item            string `json:"item"`
-	ItemDescription string `json:"item_description"`
 }
 
 func ParseEpgJsonString(jsonstr string) ([]*Epg, []error) {
@@ -92,14 +87,11 @@ func newEpgFromMap(m map[string]interface{}, elist *[]error) *Epg {
 		}
 		epg.Categories = append(epg.Categories, c)
 	}
-	epg.ExtDetails = make([]ExtDetail, 0)
+	epg.ExtDetails = make(map[string]string)
 	if exts, ok := m["extdetail"]; ok {
 		for _, v := range exts.([]interface{}) {
 			v2 := v.(map[string]interface{})
-			epg.ExtDetails = append(epg.ExtDetails, ExtDetail{
-				v2["item"].(string),
-				v2["item_description"].(string),
-			})
+			epg.ExtDetails[v2["item"].(string)] = v2["item_description"].(string)
 		}
 	}
 	return epg
