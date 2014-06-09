@@ -19,11 +19,17 @@ type Epg struct {
 	Cid        string          `json:"cid"`
 	Sid        string          `json:"sid"`
 	Categories []Category      `json:"category"`
+	ExtDetails []ExtDetail     `json:"extdetail"`
 }
 
 type Category struct {
 	Middle string `json:"middle"`
 	Large  string `json:"large"`
+}
+
+type ExtDetail struct {
+	Item            string `json:"item"`
+	ItemDescription string `json:"item_description"`
 }
 
 func ParseEpgJsonString(jsonstr string) ([]*Epg, []error) {
@@ -85,6 +91,16 @@ func newEpgFromMap(m map[string]interface{}, elist *[]error) *Epg {
 			c.Large = large.(map[string]interface{})["ja_JP"].(string)
 		}
 		epg.Categories = append(epg.Categories, c)
+	}
+	epg.ExtDetails = make([]ExtDetail, 0)
+	if exts, ok := m["extdetail"]; ok {
+		for _, v := range exts.([]interface{}) {
+			v2 := v.(map[string]interface{})
+			epg.ExtDetails = append(epg.ExtDetails, ExtDetail{
+				v2["item"].(string),
+				v2["item_description"].(string),
+			})
+		}
 	}
 	return epg
 }
