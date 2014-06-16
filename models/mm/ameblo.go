@@ -26,6 +26,12 @@ type Crawler struct {
 	client *http.Client
 }
 
+func NewCrawler(client *http.Client) *Crawler {
+	return &Crawler{
+		client,
+	}
+}
+
 func (c *Crawler) CrawlEntryList(url string) ([]*AmebloEntry, error) {
 	resp, err := c.client.Get(url)
 	if err != nil {
@@ -51,7 +57,13 @@ func (c *Crawler) CrawlEntry(url string) (*AmebloEntry, error) {
 		return nil, fmt.Errorf("Server returns %d code.", resp.StatusCode)
 	}
 
-	return ParseEntry(resp.Body)
+	e, err := ParseEntry(resp.Body)
+	if err != nil {
+		return nil, err
+	} else {
+		e.Url = url
+		return e, nil
+	}
 }
 
 type AmebloEntry struct {
@@ -59,11 +71,11 @@ type AmebloEntry struct {
 	Title      string    `json:"title"`
 	Owner      string    `json:"owner"`
 	PostAt     time.Time `json:"post_at"`
-	Content    string    `json:"content"`
-	CrawledAt  string    `json:"crawled_at"`
 	AmLikes    int       `json:"am_likes"`
 	AmComments int       `json:"am_comments"`
 	UpdatedAt  time.Time `json:"updated_at"`
+	Content    string    `json:"content" datastore:",noindex"`
+	CrawledAt  time.Time `json:"crawled_at"`
 }
 
 func ParseEntry(r io.Reader) (*AmebloEntry, error) {
@@ -144,4 +156,10 @@ func getAttributeValue(key string, node *html.Node) string {
 		}
 	}
 	return ""
+}
+
+type AmebloRef struct {
+	Url  string `json:"url"`
+	From string `json:"from"`
+	To   string `json:"to"`
 }
