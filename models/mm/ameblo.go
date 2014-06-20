@@ -61,8 +61,12 @@ func (c *Crawler) CrawlEntry(url string) (*AmebloEntry, error) {
 	if err != nil {
 		return nil, err
 	} else {
-		e.Url = url
-		return e, nil
+		if e != nil {
+			return e, nil
+		} else {
+			// Ignorable url
+			return nil, nil
+		}
 	}
 }
 
@@ -125,15 +129,20 @@ func ParseEntryList(r io.Reader) ([]*AmebloEntry, error) {
 		if err != nil {
 			continue
 		}
+		div := findOne(".contentDetailArea", listItem)
 		// AmLikes and AmComments
-		n = findOne(".contentComment", listItem)
-		e.AmComments, _ = strconv.Atoi(
-			numRegexp.FindString(extractText(n.FirstChild)),
-		)
-		n = findOne("a.skinWeakColor", n.Parent)
-		e.AmLikes, _ = strconv.Atoi(
-			numRegexp.FindString(extractText(n.FirstChild)),
-		)
+		n = findOne("a.contentComment", div)
+		if n != nil {
+			e.AmComments, _ = strconv.Atoi(
+				numRegexp.FindString(extractText(n.FirstChild)),
+			)
+		}
+		n = findOne("a.skinWeakColor", div)
+		if n != nil {
+			e.AmLikes, _ = strconv.Atoi(
+				numRegexp.FindString(extractText(n.FirstChild)),
+			)
+		}
 		entryList = append(entryList, e)
 	}
 	return entryList, nil
@@ -146,6 +155,9 @@ func extractText(n *html.Node) string {
 func findOne(sel string, node *html.Node) *html.Node {
 	s, _ := selector.Selector(sel)
 	n := s.Find(node)
+	if n == nil || len(n) == 0 {
+		return nil
+	}
 	return n[0]
 }
 
