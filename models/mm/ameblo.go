@@ -62,6 +62,7 @@ func (c *Crawler) CrawlEntry(url string) (*AmebloEntry, error) {
 		return nil, err
 	} else {
 		if e != nil {
+			e.Url = url
 			return e, nil
 		} else {
 			// Ignorable url
