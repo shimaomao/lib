@@ -1,8 +1,9 @@
-package mm
+package ameblo
 
 import (
 	"github.com/speedland/wcg"
 	"testing"
+	"time"
 )
 
 func TestIsMentionedIn(t *testing.T) {
@@ -12,6 +13,9 @@ func TestIsMentionedIn(t *testing.T) {
 		"http://example.com/picture.png",
 		"http://example.com/blog/",
 		[]string{"test", "テスト", "てすと"},
+		123456,
+		1,
+		time.Time{},
 	}
 	assert.Ok(member.IsMentionedIn("This is a test."), "English word")
 	assert.Ok(member.IsMentionedIn("This is a テスト."), "Katakana word")

@@ -1,4 +1,4 @@
-package mm
+package ameblo
 
 import (
 	"github.com/speedland/wcg"

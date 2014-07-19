@@ -1,4 +1,4 @@
-package mm
+package ameblo
 
 import (
 	"code.google.com/p/go-html-transform/css/selector"
