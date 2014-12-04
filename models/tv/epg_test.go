@@ -1,4 +1,4 @@
-package models
+package tv
 
 import (
 	"github.com/speedland/wcg"

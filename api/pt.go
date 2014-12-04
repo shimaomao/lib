@@ -2,16 +2,16 @@ package api
 
 import (
 	"fmt"
-	"github.com/speedland/lib/models"
+	"github.com/speedland/lib/models/tv"
 	"io"
 )
 
-func (c *ApiClient) GetTvRecords() ([]*models.TvRecord, error) {
+func (c *ApiClient) GetTvRecords() ([]*tv.TvRecord, error) {
 	endpoint := buildUrl("/api/pt/records/")
 	if resp, err := c.Get(endpoint); err != nil {
 		return nil, err
 	} else {
-		var records []*models.TvRecord
+		var records []*tv.TvRecord
 		if err := handleAsJson(resp, &records); err != nil {
 			return nil, err
 		} else {
@@ -20,16 +20,16 @@ func (c *ApiClient) GetTvRecords() ([]*models.TvRecord, error) {
 	}
 }
 
-func GetTvRecords() ([]*models.TvRecord, error) {
+func GetTvRecords() ([]*tv.TvRecord, error) {
 	return DefaultApiClient.GetTvRecords()
 }
 
-func (c *ApiClient) GetTvChannels() ([]*models.TvChannel, error) {
+func (c *ApiClient) GetTvChannels() ([]*tv.TvChannel, error) {
 	endpoint := buildUrl("/api/pt/channels/")
 	if resp, err := c.Get(endpoint); err != nil {
 		return nil, err
 	} else {
-		var channels []*models.TvChannel
+		var channels []*tv.TvChannel
 		if err := handleAsJson(resp, &channels); err != nil {
 			return nil, err
 		} else {
@@ -38,7 +38,7 @@ func (c *ApiClient) GetTvChannels() ([]*models.TvChannel, error) {
 	}
 }
 
-func GetTvChannels() ([]*models.TvChannel, error) {
+func GetTvChannels() ([]*tv.TvChannel, error) {
 	return DefaultApiClient.GetTvChannels()
 }
 
