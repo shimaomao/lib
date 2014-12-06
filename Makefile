@@ -9,6 +9,8 @@ deps:
 	$(GO) get code.google.com/p/go-html-transform/h5
 	$(GO) get code.google.com/p/go-html-transform/css/selector
 	$(GO) get code.google.com/p/go.net/html
+	$(GO) get code.google.com/p/go.text/encoding/japanese
+	$(GO) get code.google.com/p/go.text/transform
 
 test: deps
 	@# TARGET_DIR=./
