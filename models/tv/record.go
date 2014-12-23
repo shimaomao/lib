@@ -273,12 +273,12 @@ type TvRecord struct {
 	Category  string    `json:"category"` // Category Name
 	StartAt   time.Time `json:"start_at"`
 	EndAt     time.Time `json:"end_at"`
-	Cid       string    `json:"cid"`        // Channel ID
-	Sid       string    `json:"sid"`        // Signal ID
-	Uid       string    `json:"uid"`        // user id
-	InputIdx  int       `json:"input_idx"`  // PT2 input channel index
-	EventId   int       `json:"event_id"`   // EPG Event ID
-	ProgramId int       `json:"program_id"` // iEPG Program ID (same as Event ID?)
+	Cid       string    `json:"cid"`       // Channel ID
+	Sid       string    `json:"sid"`       // Signal ID
+	Uid       string    `json:"uid"`       // user id
+	InputIdx  int       `json:"input_idx"` // PT2 input channel index
+	EventId   int       `json:"event_id"`  // EPG Event ID
+	IEpgId    string    `json:"iepg_id"`   // IEPG ID
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

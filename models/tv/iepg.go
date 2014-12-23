@@ -8,6 +8,7 @@ import (
 	"code.google.com/p/go.text/transform"
 	"fmt"
 	"github.com/speedland/lib/util"
+	"github.com/speedland/wcg"
 	v "github.com/speedland/wcg/validation"
 	"io"
 	"net/http"
@@ -26,9 +27,28 @@ type IEpg struct {
 	Body         util.ByteString `json:"detail"`
 	StartAt      time.Time       `json:"start_at"`
 	EndAt        time.Time       `json:"end_at"`
+	Category     string          `json:"category"`
+	Cid          string          `json:"cid"`
+	Sid          string          `json:"sid"`
 	Optout       bool            `json:"optout"`
 	CreatedAt    time.Time       `json:"created_at"`
 	UpdatedAt    time.Time       `json:"updated_at"`
+}
+
+func (iepg *IEpg) ToTvRecord() *TvRecord {
+	return &TvRecord{
+		Id:        wcg.Must(wcg.UUID()).(string),
+		Title:     strings.Replace(iepg.ProgramTitle, "/", "／", -1),
+		Category:  iepg.Category,
+		StartAt:   iepg.StartAt,
+		EndAt:     iepg.EndAt,
+		Cid:       iepg.Cid,
+		Sid:       iepg.Sid,
+		Uid:       "", // for future use.
+		IEpgId:    iepg.Id,
+		CreatedAt: iepg.CreatedAt,
+		UpdatedAt: iepg.UpdatedAt,
+	}
 }
 
 type Crawler struct {
@@ -61,7 +81,7 @@ const FEED_SCOPE_BS = 2
 const FEED_SCOPE_CS = 5
 const FEED_SCOPE_CS_PREMIUM = 4
 const feed_url_template = "http://tv.so-net.ne.jp/rss/schedulesBySearch.action?stationPlatformId=%d&condition.keyword=%s"
-const iepg_url_template = "http://tv.so-net.ne.jp/iepg.tvpi?id=%s"
+const iepg_url_template = "http://tv.so-net.ne.jp/iepg.tvpid?id=%s"
 
 func (c *Crawler) GetIEpgList(keyword string, scope int) ([]string, error) {
 	urlstr := fmt.Sprintf(feed_url_template, scope, url.QueryEscape(keyword))

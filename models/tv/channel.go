@@ -6,9 +6,10 @@ import (
 )
 
 type TvChannel struct {
-	Cid  string `json:"cid"`
-	Sid  string `json:"sid"`
-	Name string `json:"name"`
+	Cid           string `json:"cid"`
+	Sid           string `json:"sid"`
+	Name          string `json:"name"`
+	IEpgStationId string `json:"iepg_station_id"`
 }
 
 var TvChannelValidator = v.NewObjectValidator()
