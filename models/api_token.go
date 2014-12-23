@@ -38,6 +38,6 @@ func (token *ApiToken) ShouldAlert() bool {
 	if token.AlertOn <= 0 {
 		return false
 	} else {
-		return time.Now().Sub(token.LastAccess) > token.AlertOn
+		return time.Now().Sub(token.LastAccess) > token.AlertOn*time.Second
 	}
 }
